@@ -434,14 +434,14 @@ end
 local KEYS = {'#', 'F'}
 for i, m in ipairs(KEYS) do
 	for i = 1, 9 do
-	
+
 		local key = '#' .. i + 9
 		local idx = 1
 		if m == 'F' then
 			key = 'F' .. i
 			idx = 2
 		end
-		
+
 	    globalkeys = gears.table.join(globalkeys,
 	        -- View tag
 	        awful.key({ modkey }, key,
