@@ -1,3 +1,7 @@
+local capi = {
+    mouse = mouse
+}
+
 -- Standard awesome library
 local gears = require("gears")
 local keys = require("keys")
@@ -441,8 +445,19 @@ for i, m in ipairs(KEYS) do
                             for k = 1, #clients do
                                 -- gears.debug.print_warning(cid .. ': ' .. clients[k].name)
                                 if cid <= 1 then
-                                    client.focus = clients[k]
-                                    clients[k]:raise()
+                                    local nc = clients[k]
+                                    client.focus = nc
+                                    nc:raise()
+
+                                    local m = capi.mouse
+                                    local co = m.coords()
+                                    local cc = m.current_client
+                                    local x_factor = (co.x - cc.x) / cc.width
+                                    local y_factor = (co.y - cc.y) / cc.height
+                                    m.coords({
+                                        x = nc.x + nc.width * x_factor,
+                                        y = nc.y + nc.height * y_factor
+                                    })
                                     return
                                 end
                                 cid = cid - 1
