@@ -1,5 +1,6 @@
 local capi = {
-    mouse = mouse
+    mouse = mouse,
+    client = client
 }
 
 -- Standard awesome library
@@ -422,53 +423,35 @@ for i, m in ipairs(KEYS) do
         keys.global('Win ' .. key,
                     function ()
                         local cid = keyid
-                        local cl = nil
+                        local all_clients = capi.client.get()
+                        local clients = {}
+
                         for j = 1, #SCREENS do
                             local scr = SCREENS[j]
-                            local tag = scr.selected_tag
-                            local clients = {table.unpack(tag:clients())}
-                            table.sort(clients, function (a, b)
-                                if a.x < b.x then
-                                    return true
+                            for _, c in pairs(all_clients) do
+                                if c.screen == scr then
+                                    table.insert(clients, c)
                                 end
-                                if a.x > b.x then
-                                    return false
-                                end
-                                if a.y < b.y then
-                                    return true
-                                end
-                                if a.y > b.y then
-                                    return false
-                                end
-                                return true
-                            end)
-                            for k = 1, #clients do
-                                -- gears.debug.print_warning(cid .. ': ' .. clients[k].name)
-                                if cid <= 1 then
-                                    local nc = clients[k]
-                                    client.focus = nc
-                                    nc:raise()
-
-                                    local m = capi.mouse
-                                    local co = m.coords()
-                                    local cc = m.current_client
-                                    local x_factor = cc and (co.x - cc.x) / cc.width or 0.5
-                                    local y_factor = cc and (co.y - cc.y) / cc.height or 0.5
-                                    m.coords({
-                                        x = nc.x + nc.width * x_factor,
-                                        y = nc.y + nc.height * y_factor
-                                    })
-                                    return
-                                end
-                                cid = cid - 1
                             end
                         end
-                        -- local screen = SCREENS[idx]
-                        -- local tag = screen.tags[i]
-                        -- if tag then
-                        --     tag:view_only()
-                        -- end
-                        -- awful.screen.focus(screen)
+
+                        local nc = clients[math.min(#clients, cid)]
+                        if nc then
+                            -- local nc = clients[k]
+                            client.focus = nc
+                            nc:raise()
+
+                            local m = capi.mouse
+                            local co = m.coords()
+                            local cc = m.current_client
+                            local x_factor = cc and (co.x - cc.x) / cc.width or 0.5
+                            local y_factor = cc and (co.y - cc.y) / cc.height or 0.5
+                            m.coords({
+                                x = nc.x + nc.width * x_factor,
+                                y = nc.y + nc.height * y_factor
+                            })
+                            return
+                        end
                     end,
                     {description = "view tag #"..i, group = "tag"})
         -- Toggle tag display.
