@@ -452,8 +452,8 @@ for i, m in ipairs(KEYS) do
                                     local m = capi.mouse
                                     local co = m.coords()
                                     local cc = m.current_client
-                                    local x_factor = (co.x - cc.x) / cc.width
-                                    local y_factor = (co.y - cc.y) / cc.height
+                                    local x_factor = cc and (co.x - cc.x) / cc.width or 0.5
+                                    local y_factor = cc and (co.y - cc.y) / cc.height or 0.5
                                     m.coords({
                                         x = nc.x + nc.width * x_factor,
                                         y = nc.y + nc.height * y_factor
