@@ -429,12 +429,14 @@ for i, m in ipairs(KEYS) do
                         for j = 1, #SCREENS do
                             local scr = SCREENS[j]
                             for _, c in pairs(all_clients) do
-                                if c.screen == scr then
+                                if c.screen == scr and c.first_tag == scr.selected_tag then
                                     table.insert(clients, c)
                                 end
                             end
                         end
 
+                        gears.debug.print_warning('clients: ' .. #clients)
+                        gears.debug.print_warning('cid: ' .. cid)
                         local nc = clients[math.min(#clients, cid)]
                         if nc then
                             -- local nc = clients[k]
