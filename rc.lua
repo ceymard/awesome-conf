@@ -217,7 +217,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.tag({ "one", "2", "3", "4", "5", "6", "7", "8", "9", "pouet" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -272,9 +272,11 @@ keys.global('XF86AudioPlay', sendToSpotify('PlayPause'))
 .global('XF86AudioNext', sendToSpotify("Next")) -- XF86AudioNext
 .global("XF86AudioPrev", sendToSpotify("Previous")) -- XF86AudioPrev
 -- .global('Win+s', hotkeys_popup.show_help, {description='This help', group='awesome'})
+.global('Win Right', function () awful.screen.focus_bydirection('right') end, {description='Next Screen', group='tag'})
+.global('Win Left', function () awful.screen.focus_bydirection('left') end, {description='Prev Screen', group='tag'})
 .global('Win slash', hotkeys_popup.show_help, {description='This help', group='awesome'})
-.global("Win comma",   awful.tag.viewprev, {description = "view previous", group = "tag"})
-.global("Win period",  awful.tag.viewnext, {description = "view next", group = "tag"})
+.global("Win Down",   awful.tag.viewprev, {description = "view previous", group = "tag"})
+.global("Win Up",  awful.tag.viewnext, {description = "view next", group = "tag"})
 .global('Win Escape', awful.tag.history.restore, {description = "go back", group = "tag"})
 .global('Win j', function () awful.client.focus.byidx(1) end,
                 {description = "focus next by index", group = "client"})
