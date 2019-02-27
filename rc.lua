@@ -217,7 +217,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "one", "2", "3", "4", "5", "6", "7", "8", "9", "pouet" }, s, awful.layout.layouts[1])
+    awful.tag({ "one", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -406,6 +406,33 @@ keys.global('XF86AudioPlay', sendToSpotify('PlayPause'))
     {description = "(un)maximize horizontally", group = "client"})
 
 
+function focus_screen_or_client(id)
+
+    if #SCREENS == 1 then
+        -- if we only have one screen, then we're going to look for the nth client
+        -- on that screen in the order of clients
+        local clients = SCREENS[1]:get_clients()
+        local client = clients[math.min(#clients, id)]
+
+        return
+    end
+
+    local target_screen = SCREENS[math.min(id, #SCREENS)]
+
+    if target_screen ~= awful.screen.focused() then
+        awful.screen.focus(target_screen)
+    else
+        -- We are on the same screen, so we cycle.
+        -- awful.client.focus.bydirection('right')
+        local next = awful.client.next(1)
+        if next then
+            client.focus = next
+            next:raise()
+        end
+    end
+
+end
+
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
@@ -424,38 +451,7 @@ for i, m in ipairs(KEYS) do
         -- View tag
         keys.global('Win ' .. key,
                     function ()
-                        local cid = keyid
-                        local all_clients = capi.client.get()
-                        local clients = {}
-
-                        for j = 1, #SCREENS do
-                            local scr = SCREENS[j]
-                            for _, c in pairs(all_clients) do
-                                if c.screen == scr and c.first_tag == scr.selected_tag then
-                                    table.insert(clients, c)
-                                end
-                            end
-                        end
-
-                        gears.debug.print_warning('clients: ' .. #clients)
-                        gears.debug.print_warning('cid: ' .. cid)
-                        local nc = clients[math.min(#clients, cid)]
-                        if nc then
-                            -- local nc = clients[k]
-                            client.focus = nc
-                            nc:raise()
-
-                            local m = capi.mouse
-                            local co = m.coords()
-                            local cc = m.current_client
-                            local x_factor = cc and (co.x - cc.x) / cc.width or 0.5
-                            local y_factor = cc and (co.y - cc.y) / cc.height or 0.5
-                            m.coords({
-                                x = nc.x + nc.width * x_factor,
-                                y = nc.y + nc.height * y_factor
-                            })
-                            return
-                        end
+                        focus_screen_or_client(keyid)
                     end,
                     {description = "view tag #"..i, group = "tag"})
         -- Toggle tag display.
