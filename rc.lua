@@ -411,9 +411,10 @@ function focus_screen_or_client(id)
     if #SCREENS == 1 then
         -- if we only have one screen, then we're going to look for the nth client
         -- on that screen in the order of clients
-        local clients = SCREENS[1]:get_clients()
-        local client = clients[math.min(#clients, id)]
-
+        local clients = SCREENS[1]:get_clients(false)
+        local cl = clients[math.min(#clients, id)]
+        client.focus = cl
+        cl:raise()
         return
     end
 
@@ -432,6 +433,25 @@ function focus_screen_or_client(id)
     end
 
 end
+
+-- function move_client_by_direction (dir)
+--     local cl = client.focus
+--     if cl = nil then return end
+
+
+
+--     local current_tag = cl.first_tag
+--     local new_tag =
+
+--     if client.focus then
+--         -- local tag = client.focus.screen.tags[i]
+--         local tag = SCREENS[idx].tags[i]
+--         if tag then
+--             client.focus:move_to_tag(tag)
+--         end
+--     end
+-- end,
+
 
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
