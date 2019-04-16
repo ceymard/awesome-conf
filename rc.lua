@@ -306,6 +306,8 @@ keys.global('XF86AudioPlay', sendToSpotify('PlayPause'))
 -- Standard program
 .global('Win Return', function () awful.spawn(terminal) end,
                 {description = "open a terminal", group = "launcher"})
+.global('Print', function () awful.spawn('flameshot gui') end,
+				{description = "Flameshot", group = "launcher"})
 .global('Win Ctrl r', awesome.restart,
                 {description = "reload awesome", group = "awesome"})
 .global('Win Shift q', awesome.quit,
